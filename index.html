@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS AI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at center,#17202b 0%,#080b10 55%,#030406 100%);
+  color:#f5c96a;
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+.container{
+  width:92%;
+  max-width:500px;
+  text-align:center;
+}
+
+h1{
+  font-size:42px;
+  letter-spacing:7px;
+  margin-bottom:8px;
+  text-shadow:0 0 20px #f5c96a;
+}
+
+.signal{
+  color:#9ba4ad;
+  font-size:12px;
+  letter-spacing:3px;
+  margin-bottom:35px;
+}
+
+.status{
+  color:#d8dce0;
+  font-size:18px;
+  margin:25px 0;
+  min-height:25px;
+}
+
+.mic{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  border:3px solid #f5c96a;
+  background:radial-gradient(circle,#443719,#17130a);
+  margin:25px auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  box-shadow:0 0 25px #f5c96a55, inset 0 0 30px #f5c96a22;
+  transition:.2s;
+  user-select:none;
+}
+
+.mic:active{
+  transform:scale(.94);
+}
+
+.mic.listening{
+  animation:pulse 1s infinite;
+  border-color:#fff;
+  box-shadow:0 0 45px #f5c96a;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
+}
+
+.mic-icon{
+  font-size:55px;
+}
+
+.speak{
+  font-size:13px;
+  letter-spacing:3px;
+  margin-top:8px;
+}
+
+.box{
+  margin-top:30px;
+  padding:18px;
+  border:1px solid #ffffff20;
+  border-radius:15px;
+  background:#ffffff06;
+  text-align:left;
+}
+
+.label{
+  color:#777f88;
+  font-size:11px;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
+.command{
+  color:white;
+  min-height:24px;
+  word-break:break-word;
+}
+
+.response{
+  color:#f5c96a;
+  min-height:24px;
+  margin-top:12px;
+}
+
+.note{
+  margin-top:20px;
+  color:#68717a;
+  font-size:11px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>JARVIS AI</h1>
+
+  <div class="signal">SIGNAL CHANNEL 01 / READY</div>
+
+  <div class="status" id="status">
+    बोलिए, मैं सुन रहा हूँ
+  </div>
+
+  <div class="mic" id="mic">
+    <div class="mic-icon">🎙️</div>
+    <div class="speak">SPEAK</div>
+  </div>
+
+  <div class="box">
+    <div class="label">LATEST SIGNAL</div>
+    <div class="command" id="command">
+      अभी कोई command नहीं
+    </div>
+
+    <div class="label" style="margin-top:18px;">JARVIS RESPONSE</div>
+    <div class="response" id="response">
+      सिस्टम तैयार है।
+    </div>
+  </div>
+
+  <div class="note">
+    Hindi + English Voice Assistant
+  </div>
+
+</div>
+
+<script>
+
+const mic = document.getElementById("mic");
+const statusText = document.getElementById("status");
+const commandText = document.getElementById("command");
+const responseText = document.getElementById("response");
+
+let recognition;
+let listening = false;
+
+// Speech Recognition support
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+
+  recognition = new SpeechRecognition();
+
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = "hi-IN";
+
+  recognition.onstart = function(){
+
+    listening = true;
+
+    mic.classList.add("listening");
+
+    statusText.innerText = "🎙️ Listening...";
+
+    responseText.innerText = "मैं सुन रहा हूँ...";
+  };
+
+  recognition.onresult = function(event){
+
+    const text = event.results[0][0].transcript;
+
+    commandText.innerText = text;
+
+    statusText.innerText = "Command received";
+
+    processCommand(text);
+  };
+
+  recognition.onerror = function(event){
+
+    listening = false;
+
+    mic.classList.remove("listening");
+
+    if(event.error === "not-allowed"){
+
+      statusText.innerText =
+        "❌ Microphone permission denied";
+
+      speak("Microphone permission allow kijiye.");
+
+    }else{
+
+      statusText.innerText =
+        "❌ आवाज़ समझ नहीं आई";
+
+      speak("मुझे आपकी आवाज़ समझ नहीं आई।");
+    }
+  };
+
+  recognition.onend = function(){
+
+    listening = false;
+
+    mic.classList.remove("listening");
+
+  };
+
+}else{
+
+  statusText.innerText =
+    "❌ आपका browser voice recognition support नहीं करता।";
+}
+
+
+// Microphone button
+mic.addEventListener("click", function(){
+
+  if(!recognition){
+
+    speak("यह browser voice recognition support नहीं करता।");
+
+    return;
+  }
+
+  if(listening){
+
+    recognition.stop();
+
+    return;
+  }
+
+  // Hindi voice recognition
+  recognition.lang = "hi-IN";
+
+  try{
+
+    recognition.start();
+
+  }catch(error){
+
+    console.log(error);
+
+  }
+
+});
+
+
+// Process commands
+function processCommand(text){
+
+  const command = text.toLowerCase();
+
+  // Hello
+  if(
+    command.includes("hello") ||
+    command.includes("हेलो") ||
+    command.includes("हैलो") ||
+    command.includes("jarvis")
+  ){
+
+    reply("नमस्ते! मैं JARVIS हूँ। बताइए मैं आपकी क्या मदद करूँ?");
+
+  }
+
+  // Time
+  else if(
+    command.includes("time") ||
+    command.includes("समय") ||
+    command.includes("टाइम")
+  ){
+
+    const now = new Date();
+
+    let time =
+      now.toLocaleTimeString("hi-IN",{
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+
+    reply("अभी समय है " + time);
+
+  }
+
+  // YouTube
+  else if(
+    command.includes("youtube") ||
+    command.includes("यूट्यूब")
+  ){
+
+    reply("YouTube खोल रहा हूँ।");
+
+    setTimeout(function(){
+
+      window.open(
+        "https://www.youtube.com/",
+        "_blank"
+      );
+
+    },700);
+
+  }
+
+  // Google
+  else if(
+    command.includes("google") ||
+    command.includes("गूगल")
+  ){
+
+    reply("Google खोल रहा हूँ।");
+
+    setTimeout(function(){
+
+      window.open(
+        "https://www.google.com/",
+        "_blank"
+      );
+
+    },700);
+
+  }
+
+  // WhatsApp
+  else if(
+    command.includes("whatsapp") ||
+    command.includes("व्हाट्सएप")
+  ){
+
+    reply("WhatsApp खोल रहा हूँ।");
+
+    setTimeout(function(){
+
+      window.open(
+        "https://web.whatsapp.com/",
+        "_blank"
+      );
+
+    },700);
+
+  }
+
+  // Camera
+  else if(
+    command.includes("camera") ||
+    command.includes("कैमरा")
+  ){
+
+    reply(
+      "Camera command browser से सीधे control नहीं किया जा सकता।"
+    );
+
+  }
+
+  // Help
+  else if(
+    command.includes("help") ||
+    command.includes("मदद")
+  ){
+
+    reply(
+      "आप बोल सकते हैं: YouTube खोलो, Google खोलो, समय बताओ या Hello Jarvis."
+    );
+
+  }
+
+  // Unknown
+  else{
+
+    reply(
+      "आपने कहा: " + text +
+      ". यह command अभी मेरे अंदर उपलब्ध नहीं है।"
+    );
+
+  }
+
+}
+
+
+// Reply
+function reply(text){
+
+  responseText.innerText = text;
+
+  speak(text);
+
+}
+
+
+// Text to Speech
+function speak(text){
+
+  if(!("speechSynthesis" in window)){
+
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const speech =
+    new SpeechSynthesisUtterance(text);
+
+  speech.lang = "hi-IN";
+  speech.rate = 0.95;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
+
+}
+
+</script>
+
+</body>
+</html>
