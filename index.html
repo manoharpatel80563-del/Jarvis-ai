@@ -383,7 +383,30 @@ function processCommand(text){
     command.includes("टाइम") ||
     command.includes("बजे")
   ){
+  // BATTERY
 
+  else if(
+    command.includes("battery") ||
+    command.includes("बैटरी") ||
+    command.includes("चार्ज")
+  ){
+
+    tellBattery();
+
+  }
+
+
+  // INTERNET
+
+  else if(
+    command.includes("internet") ||
+    command.includes("इंटरनेट") ||
+    command.includes("नेट")
+  ){
+
+    tellInternet();
+
+}
     tellTime();
 
   }
@@ -581,7 +604,50 @@ function tellDate(){
 
 }
 
+// BATTERY STATUS
 
+async function tellBattery(){
+
+  if(!("getBattery" in navigator)){
+
+    reply("इस browser में battery information उपलब्ध नहीं है।");
+
+    return;
+  }
+
+  const battery = await navigator.getBattery();
+
+  const level = Math.round(battery.level * 100);
+
+  const charging =
+    battery.charging
+      ? "और अभी charging पर है।"
+      : "और अभी charging पर नहीं है।";
+
+  reply(
+    "आपके फोन की battery " +
+    level +
+    " प्रतिशत है, " +
+    charging
+  );
+}
+
+
+// INTERNET STATUS
+
+function tellInternet(){
+
+  if(navigator.onLine){
+
+    reply("Internet connection अभी online है।");
+
+  }else{
+
+    reply("Internet connection अभी offline है।");
+
+  }
+
+}
 // QUICK BUTTONS
 
 function quickCommand(type){
