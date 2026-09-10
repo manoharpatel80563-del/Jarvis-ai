@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS AI V2</title>
+<title>JARVIS V4</title>
 
 <style>
 *{
@@ -15,64 +15,72 @@
 body{
   min-height:100vh;
   background:
-    radial-gradient(circle at center,#1b2735 0%,#080b10 55%,#020304 100%);
-  color:#f5c96a;
+    radial-gradient(circle at top,#18233d 0%,#070b14 45%,#020307 100%);
+  color:#fff;
   font-family:Arial,sans-serif;
   display:flex;
   justify-content:center;
   align-items:center;
-  overflow:auto;
+  padding:18px;
 }
 
 .container{
-  width:92%;
-  max-width:500px;
+  width:100%;
+  max-width:430px;
+  min-height:700px;
+  background:rgba(8,13,25,.88);
+  border:1px solid rgba(0,200,255,.35);
+  border-radius:28px;
+  padding:24px;
+  box-shadow:
+    0 0 35px rgba(0,180,255,.15),
+    inset 0 0 30px rgba(0,180,255,.04);
   text-align:center;
-  padding:25px 0;
 }
 
 h1{
-  font-size:42px;
+  font-size:48px;
   letter-spacing:7px;
-  text-shadow:0 0 20px #f5c96a;
+  color:#00d9ff;
+  text-shadow:0 0 18px #00d9ff;
 }
 
 .version{
-  color:#777f88;
-  font-size:11px;
+  color:#7f91a8;
+  font-size:13px;
   letter-spacing:3px;
-  margin-top:6px;
-}
-
-.signal{
-  color:#9ba4ad;
-  font-size:12px;
-  letter-spacing:3px;
-  margin:25px 0;
+  margin-top:5px;
 }
 
 .status{
-  color:#d8dce0;
-  font-size:18px;
-  margin:20px 0;
-  min-height:25px;
+  margin:22px 0;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(0,255,150,.06);
+  border:1px solid rgba(0,255,150,.25);
+  color:#62ffb0;
+  font-size:14px;
+}
+
+.status.listening{
+  color:#00d9ff;
+  border-color:#00d9ff;
+  box-shadow:0 0 18px rgba(0,217,255,.3);
 }
 
 .mic{
-  width:180px;
-  height:180px;
-  border-radius:50%;
-  border:3px solid #f5c96a;
-  background:radial-gradient(circle,#51421b,#17130a);
+  width:145px;
+  height:145px;
   margin:25px auto;
+  border-radius:50%;
+  border:2px solid #00d9ff;
+  background:radial-gradient(circle,#123044,#06101a);
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
   cursor:pointer;
-  box-shadow:
-    0 0 25px #f5c96a55,
-    inset 0 0 30px #f5c96a22;
+  font-size:65px;
+  box-shadow:0 0 25px rgba(0,217,255,.3);
   transition:.2s;
   user-select:none;
 }
@@ -83,79 +91,65 @@ h1{
 
 .mic.listening{
   animation:pulse 1s infinite;
-  border-color:#fff;
-  box-shadow:0 0 50px #f5c96a;
+  border-color:#00ffae;
+  box-shadow:
+    0 0 25px #00ffae,
+    0 0 60px rgba(0,255,174,.25);
 }
 
 @keyframes pulse{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.08)}
-  100%{transform:scale(1)}
-}
-
-.mic-icon{
-  font-size:55px;
-}
-
-.speak{
-  font-size:13px;
-  letter-spacing:3px;
-  margin-top:8px;
-}
-
-.box{
-  margin-top:30px;
-  padding:18px;
-  border:1px solid #ffffff20;
-  border-radius:15px;
-  background:#ffffff06;
-  text-align:left;
+  50%{
+    transform:scale(1.07);
+  }
 }
 
 .label{
-  color:#777f88;
-  font-size:11px;
+  color:#71849b;
+  font-size:12px;
   letter-spacing:2px;
   margin-bottom:8px;
 }
 
-.command{
-  color:white;
-  min-height:24px;
-  word-break:break-word;
+.box{
+  min-height:55px;
+  padding:15px;
+  border-radius:14px;
+  background:#090f1c;
+  border:1px solid #17283b;
+  margin-bottom:14px;
+  line-height:1.5;
+  word-wrap:break-word;
 }
 
 .response{
-  color:#f5c96a;
-  min-height:24px;
-  margin-top:12px;
-  line-height:1.5;
+  color:#00e5ff;
 }
 
 .buttons{
-  display:flex;
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:10px;
   margin-top:18px;
 }
 
-.btn{
-  flex:1;
-  padding:12px 8px;
-  border:1px solid #f5c96a55;
-  border-radius:10px;
-  background:#f5c96a0d;
-  color:#f5c96a;
+button{
+  border:1px solid #1b536b;
+  background:#091622;
+  color:#d8f8ff;
+  padding:13px 8px;
+  border-radius:12px;
+  font-size:14px;
   cursor:pointer;
-  font-size:12px;
 }
 
-.btn:active{
-  transform:scale(.96);
+button:active{
+  transform:scale(.97);
+  background:#103044;
 }
 
-.note{
+.footer{
   margin-top:20px;
-  color:#68717a;
+  color:#536579;
   font-size:11px;
 }
 </style>
@@ -166,68 +160,51 @@ h1{
 <div class="container">
 
   <h1>JARVIS</h1>
+  <div class="version">AI VOICE ASSISTANT • V4</div>
 
-  <div class="version">AI VOICE ASSISTANT • V2</div>
-
-  <div class="signal">
-    SIGNAL CHANNEL 01 / ONLINE
+  <div id="status" class="status">
+    🟢 READY — Mic दबाकर बोलिए
   </div>
 
-  <div class="status" id="status">
-    बोलिए, मैं सुन रहा हूँ
+  <div
+    id="mic"
+    class="mic"
+    onclick="startListening()">
+    🎙️
   </div>
 
-  <div class="mic" id="mic">
-    <div class="mic-icon">🎙️</div>
-    <div class="speak">SPEAK</div>
+  <div class="label">LATEST COMMAND</div>
+  <div id="commandBox" class="box">
+    कोई command नहीं
   </div>
 
-  <div class="box">
-
-    <div class="label">LATEST SIGNAL</div>
-
-    <div class="command" id="command">
-      अभी कोई command नहीं
-    </div>
-
-    <div class="label" style="margin-top:18px;">
-      JARVIS RESPONSE
-    </div>
-
-    <div class="response" id="response">
-      सिस्टम तैयार है। मैं आपकी आवाज़ सुन सकता हूँ।
-    </div>
-
+  <div class="label">JARVIS RESPONSE</div>
+  <div id="responseBox" class="box response">
+    नमस्ते! मैं JARVIS V4 हूँ।
   </div>
 
   <div class="buttons">
-
-    <button class="btn" onclick="quickCommand('help')">
-      🤖 HELP
-    </button>
-
-    <button class="btn" onclick="quickCommand('time')">
-      🕒 TIME
-    </button>
-
-    <button class="btn" onclick="quickCommand('date')">
-      📅 DATE
-    </button>
-
+    <button onclick="quickCommand('समय बताओ')">🕐 समय</button>
+    <button onclick="quickCommand('आज की तारीख बताओ')">📅 तारीख</button>
+    <button onclick="quickCommand('battery बताओ')">🔋 Battery</button>
+    <button onclick="quickCommand('internet बताओ')">🌐 Internet</button>
+    <button onclick="quickCommand('google खोलो')">🔎 Google</button>
+    <button onclick="quickCommand('youtube खोलो')">▶️ YouTube</button>
+    <button onclick="quickCommand('whatsapp खोलो')">💬 WhatsApp</button>
+    <button onclick="quickCommand('help')">❓ Help</button>
   </div>
 
-  <div class="note">
-    Hindi + English Voice Assistant
+  <div class="footer">
+    JARVIS V4 • Mobile Voice AI
   </div>
 
 </div>
 
 <script>
 
-const mic = document.getElementById("mic");
-const statusText = document.getElementById("status");
-const commandText = document.getElementById("command");
-const responseText = document.getElementById("response");
+/* =========================
+   VOICE RECOGNITION
+========================= */
 
 let recognition;
 let listening = false;
@@ -240,89 +217,105 @@ if(SpeechRecognition){
 
   recognition = new SpeechRecognition();
 
-  recognition.continuous = false;
-  recognition.interimResults = false;
   recognition.lang = "hi-IN";
+
+  recognition.continuous = false;
+
+  recognition.interimResults = false;
+
+  recognition.maxAlternatives = 1;
+
 
   recognition.onstart = function(){
 
     listening = true;
 
-    mic.classList.add("listening");
+    document.getElementById("mic")
+      .classList.add("listening");
 
-    statusText.innerText = "🎙️ Listening...";
+    document.getElementById("status").className =
+      "status listening";
 
-    responseText.innerText =
-      "मैं सुन रहा हूँ...";
+    document.getElementById("status").innerText =
+      "🔵 LISTENING — बोलिए JARVIS सुन रहा है";
 
   };
+
 
   recognition.onresult = function(event){
 
     const text =
       event.results[0][0].transcript;
 
-    commandText.innerText = text;
-
-    statusText.innerText =
-      "✅ Command received";
+    document.getElementById("commandBox")
+      .innerText = text;
 
     processCommand(text);
 
   };
 
+
   recognition.onerror = function(event){
 
     listening = false;
 
-    mic.classList.remove("listening");
+    document.getElementById("mic")
+      .classList.remove("listening");
+
+    document.getElementById("status").className =
+      "status";
 
     if(event.error === "not-allowed"){
 
-      statusText.innerText =
-        "❌ Microphone permission denied";
-
-      speak(
-        "Microphone permission allow kijiye."
+      reply(
+        "Microphone permission बंद है। Browser settings में microphone permission allow करें।"
       );
 
-    }else{
+    }
 
-      statusText.innerText =
-        "❌ आवाज़ समझ नहीं आई";
+    else if(event.error === "no-speech"){
 
-      speak(
-        "मुझे आपकी आवाज़ समझ नहीं आई।"
-      );
+      reply("मुझे आपकी आवाज़ सुनाई नहीं दी। दोबारा बोलिए।");
+
+    }
+
+    else{
+
+      reply("Voice recognition में समस्या आई। दोबारा try करें।");
 
     }
 
   };
 
+
   recognition.onend = function(){
 
     listening = false;
 
-    mic.classList.remove("listening");
+    document.getElementById("mic")
+      .classList.remove("listening");
+
+    document.getElementById("status").className =
+      "status";
+
+    document.getElementById("status").innerText =
+      "🟢 READY — Mic दबाकर बोलिए";
 
   };
-
-}else{
-
-  statusText.innerText =
-    "❌ Browser voice recognition support नहीं करता।";
 
 }
 
 
-// MICROPHONE
+/* =========================
+   START MICROPHONE
+========================= */
 
-mic.addEventListener("click",function(){
+function startListening(){
 
   if(!recognition){
 
-    speak(
-      "यह browser voice recognition support नहीं करता।"
+    reply(
+      "इस browser में voice recognition support नहीं है। Chrome browser इस्तेमाल करें।"
     );
 
     return;
@@ -330,12 +323,12 @@ mic.addEventListener("click",function(){
 
   if(listening){
 
-    recognition.stop();
+    try{
+      recognition.stop();
+    }catch(e){}
 
     return;
   }
-
-  recognition.lang = "hi-IN";
 
   try{
 
@@ -343,19 +336,228 @@ mic.addEventListener("click",function(){
 
   }catch(error){
 
-    console.log(error);
+    reply(
+      "Mic start नहीं हो पाया। एक बार फिर mic दबाइए।"
+    );
 
   }
 
-});
+}
 
 
-// COMMAND PROCESSOR
-  function processCommand(text){
+/* =========================
+   SPEAK
+========================= */
 
-  const command = text.toLowerCase().trim();
+function speak(text){
 
-  // HELLO
+  if(!("speechSynthesis" in window)){
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const voice =
+    new SpeechSynthesisUtterance(text);
+
+  voice.lang = "hi-IN";
+
+  voice.rate = 0.95;
+
+  voice.pitch = 1;
+
+  voice.volume = 1;
+
+  window.speechSynthesis.speak(voice);
+
+}
+
+
+/* =========================
+   RESPONSE
+========================= */
+
+function reply(text){
+
+  document.getElementById("responseBox")
+    .innerText = text;
+
+  speak(text);
+
+}
+
+
+/* =========================
+   TIME
+========================= */
+
+function tellTime(){
+
+  const now = new Date();
+
+  let hours = now.getHours();
+
+  const minutes =
+    String(now.getMinutes()).padStart(2,"0");
+
+  let period = "AM";
+
+  if(hours >= 12){
+    period = "PM";
+  }
+
+  let displayHours = hours % 12;
+
+  if(displayHours === 0){
+    displayHours = 12;
+  }
+
+  reply(
+    "अभी समय " +
+    displayHours +
+    " बजकर " +
+    minutes +
+    " मिनट " +
+    period +
+    " है।"
+  );
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function tellDate(){
+
+  const now = new Date();
+
+  const days = [
+    "रविवार",
+    "सोमवार",
+    "मंगलवार",
+    "बुधवार",
+    "गुरुवार",
+    "शुक्रवार",
+    "शनिवार"
+  ];
+
+  const day =
+    days[now.getDay()];
+
+  const date =
+    now.getDate();
+
+  const month =
+    now.getMonth() + 1;
+
+  const year =
+    now.getFullYear();
+
+  reply(
+    "आज " +
+    day +
+    " है। तारीख " +
+    date +
+    "/" +
+    month +
+    "/" +
+    year +
+    " है।"
+  );
+
+}
+
+
+/* =========================
+   BATTERY
+========================= */
+
+async function tellBattery(){
+
+  if(!("getBattery" in navigator)){
+
+    reply(
+      "इस browser में battery information उपलब्ध नहीं है।"
+    );
+
+    return;
+  }
+
+  try{
+
+    const battery =
+      await navigator.getBattery();
+
+    const level =
+      Math.round(battery.level * 100);
+
+    let message =
+      "आपके फोन की battery " +
+      level +
+      " प्रतिशत है।";
+
+    if(battery.charging){
+
+      message +=
+        " अभी phone charging पर है।";
+
+    }else{
+
+      message +=
+        " अभी phone charging पर नहीं है.";
+
+    }
+
+    reply(message);
+
+  }catch(error){
+
+    reply(
+      "Battery information प्राप्त नहीं हो सकी।"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   INTERNET
+========================= */
+
+function tellInternet(){
+
+  if(navigator.onLine){
+
+    reply(
+      "Internet connection अभी online है।"
+    );
+
+  }else{
+
+    reply(
+      "Internet connection अभी offline है।"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   COMMAND PROCESSOR
+========================= */
+
+function processCommand(text){
+
+  const command =
+    text.toLowerCase().trim();
+
+
+  /* HELLO */
+
   if(
     command.includes("hello") ||
     command.includes("हेलो") ||
@@ -365,12 +567,14 @@ mic.addEventListener("click",function(){
   ){
 
     reply(
-      "नमस्ते! मैं JARVIS हूँ। बताइए मैं आपकी क्या मदद करूँ?"
+      "नमस्ते! मैं JARVIS V4 हूँ। बताइए मैं आपकी क्या मदद करूँ?"
     );
 
   }
 
-  // TIME
+
+  /* TIME */
+
   else if(
     command.includes("time") ||
     command.includes("समय") ||
@@ -382,7 +586,9 @@ mic.addEventListener("click",function(){
 
   }
 
-  // BATTERY
+
+  /* BATTERY */
+
   else if(
     command.includes("battery") ||
     command.includes("बैटरी") ||
@@ -394,7 +600,9 @@ mic.addEventListener("click",function(){
 
   }
 
-  // INTERNET
+
+  /* INTERNET */
+
   else if(
     command.includes("internet") ||
     command.includes("इंटरनेट") ||
@@ -406,19 +614,23 @@ mic.addEventListener("click",function(){
 
   }
 
-  // DATE
+
+  /* DATE */
+
   else if(
     command.includes("date") ||
     command.includes("तारीख") ||
-    command.includes("दिन") ||
-    command.includes("आज")
+    command.includes("दिनांक") ||
+    command.includes("आज की तारीख")
   ){
 
     tellDate();
 
   }
 
-  // YOUTUBE
+
+  /* YOUTUBE SEARCH */
+
   else if(
     command.includes("youtube") ||
     command.includes("यूट्यूब")
@@ -427,13 +639,19 @@ mic.addEventListener("click",function(){
     let search =
       command
       .replace(/youtube|यूट्यूब/gi,"")
-      .replace(/पर|में|खोलो|खोलना|search|सर्च/gi,"")
+      .replace(
+        /पर|में|खोलो|खोलना|search|सर्च/gi,
+        ""
+      )
       .trim();
+
 
     if(search.length > 0){
 
       reply(
-        "YouTube पर " + search + " search कर रहा हूँ।"
+        "YouTube पर " +
+        search +
+        " search कर रहा हूँ।"
       );
 
       setTimeout(function(){
@@ -444,7 +662,9 @@ mic.addEventListener("click",function(){
 
       },700);
 
-    }else{
+    }
+
+    else{
 
       reply("YouTube खोल रहा हूँ।");
 
@@ -459,7 +679,9 @@ mic.addEventListener("click",function(){
 
   }
 
-  // GOOGLE
+
+  /* GOOGLE SEARCH */
+
   else if(
     command.includes("google") ||
     command.includes("गूगल")
@@ -468,13 +690,19 @@ mic.addEventListener("click",function(){
     let search =
       command
       .replace(/google|गूगल/gi,"")
-      .replace(/पर|में|खोलो|खोलना|search|सर्च/gi,"")
+      .replace(
+        /पर|में|खोलो|खोलना|search|सर्च/gi,
+        ""
+      )
       .trim();
+
 
     if(search.length > 0){
 
       reply(
-        "Google पर " + search + " search कर रहा हूँ।"
+        "Google पर " +
+        search +
+        " search कर रहा हूँ।"
       );
 
       setTimeout(function(){
@@ -485,7 +713,9 @@ mic.addEventListener("click",function(){
 
       },700);
 
-    }else{
+    }
+
+    else{
 
       reply("Google खोल रहा हूँ।");
 
@@ -500,7 +730,9 @@ mic.addEventListener("click",function(){
 
   }
 
-  // WHATSAPP
+
+  /* WHATSAPP */
+
   else if(
     command.includes("whatsapp") ||
     command.includes("व्हाट्सएप")
@@ -517,20 +749,25 @@ mic.addEventListener("click",function(){
 
   }
 
-  // HELP
+
+  /* HELP */
+
   else if(
     command.includes("help") ||
     command.includes("मदद") ||
-    command.includes("क्या कर सकते")
+    command.includes("क्या कर सकते") ||
+    command.includes("क्या क्या")
   ){
 
     reply(
-      "आप समय, तारीख, battery, internet, YouTube search, Google search और WhatsApp जैसी commands बोल सकते हैं।"
+      "आप मुझसे समय, तारीख, battery, internet status, Google search, YouTube search और WhatsApp खोलने के लिए बोल सकते हैं।"
     );
 
   }
 
-  // UNKNOWN
+
+  /* UNKNOWN */
+
   else{
 
     reply(
@@ -541,162 +778,49 @@ mic.addEventListener("click",function(){
 
   }
 
-  }
+}
 
-// TIME FUNCTION
 
-function tellTime(){
+/* =========================
+   QUICK BUTTON
+========================= */
 
-  const now = new Date();
+function quickCommand(text){
 
-  const time =
-    now.toLocaleTimeString("hi-IN",{
-      hour:"2-digit",
-      minute:"2-digit"
-    });
+  document.getElementById("commandBox")
+    .innerText = text;
 
-  reply(
-    "अभी समय है " + time
-  );
+  processCommand(text);
 
 }
 
 
-// DATE FUNCTION
+/* =========================
+   ONLINE / OFFLINE EVENTS
+========================= */
 
-function tellDate(){
+window.addEventListener(
+  "online",
+  function(){
 
-  const now = new Date();
-
-  const date =
-    now.toLocaleDateString("hi-IN",{
-      weekday:"long",
-      day:"numeric",
-      month:"long",
-      year:"numeric"
-    });
-
-  reply(
-    "आज " + date + " है।"
-  );
-
-}
-
-// BATTERY STATUS
-
-async function tellBattery(){
-
-  if(!("getBattery" in navigator)){
-
-    reply("इस browser में battery information उपलब्ध नहीं है।");
-
-    return;
-  }
-
-  const battery = await navigator.getBattery();
-
-  const level = Math.round(battery.level * 100);
-
-  const charging =
-    battery.charging
-      ? "और अभी charging पर है।"
-      : "और अभी charging पर नहीं है।";
-
-  reply(
-    "आपके फोन की battery " +
-    level +
-    " प्रतिशत है, " +
-    charging
-  );
-}
-
-
-// INTERNET STATUS
-
-function tellInternet(){
-
-  if(navigator.onLine){
-
-    reply("Internet connection अभी online है।");
-
-  }else{
-
-    reply("Internet connection अभी offline है।");
+    document.getElementById("status")
+      .innerText =
+      "🟢 INTERNET ONLINE";
 
   }
+);
 
-}
-// QUICK BUTTONS
 
-function quickCommand(type){
+window.addEventListener(
+  "offline",
+  function(){
 
-  if(type === "time"){
-
-    commandText.innerText =
-      "Time";
-
-    tellTime();
+    document.getElementById("status")
+      .innerText =
+      "🔴 INTERNET OFFLINE";
 
   }
-
-  else if(type === "date"){
-
-    commandText.innerText =
-      "Date";
-
-    tellDate();
-
-  }
-
-  else if(type === "help"){
-
-    commandText.innerText =
-      "Help";
-
-    reply(
-      "आप समय, तारीख, YouTube search, Google search, WhatsApp और Hello Jarvis जैसी commands बोल सकते हैं।"
-    );
-
-  }
-
-}
-
-
-// REPLY
-
-function reply(text){
-
-  responseText.innerText = text;
-
-  speak(text);
-
-}
-
-
-// TEXT TO SPEECH
-
-function speak(text){
-
-  if(!("speechSynthesis" in window)){
-
-    return;
-
-  }
-
-  window.speechSynthesis.cancel();
-
-  const speech =
-    new SpeechSynthesisUtterance(text);
-
-  speech.lang = "hi-IN";
-
-  speech.rate = 0.95;
-
-  speech.pitch = 1;
-
-  window.speechSynthesis.speak(speech);
-
-}
+);
 
 </script>
 
